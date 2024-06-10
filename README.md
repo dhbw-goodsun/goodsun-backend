@@ -1,46 +1,24 @@
-# Goodsun Frontend
+# Goodsun Backend
 
 ## Description
-Frontend for the goodsun application. Uses the backend to calculate precise solar output. 
-
+Backend application for the goodsun application. The frontend deliveres the parameters for the calculation.
 
 ## License
 This application is licensed under `CC BY-NC 4.0`. No commercial use. This source must be named when using or developing further.
 
+## Prerequisites
 
-## Installation and useage
-Donload this project and install it using `npm install`. Make sure that angular is installed on your system. 
-If necessary change the angular serve-ip adress. For local testing it is recommened to use self signed SSL-Certiciates (see below).
+- [Docker](https://docs.docker.com/get-docker/)
 
-Configuration for the backend can be changed under `/src/environments/environment.ts` and `..environment.prod.ts`.
+## Building and Running the Docker Image
 
-Serve locally with `ng serve`.
+1. **Clone the Repository**:
+   ```sh
+   git clone https://github.com/dhbw-goodsun/goodsun-backend.git
+   cd your-repo
 
-### SSL encryption for local testing
-This Application need SSL-encryption (https). 
+2. **Build the Docker Image**
+   docker build -t goodsun-backend .
 
-#### Generating self signed SSL-Certificates (openssl)
-In the file `san.cnf`, adjust `commonName` and `IP.1` with the IP of the host. 
-
-Then execute (while in the same directionary) `openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout key.pem -out cert.pem -config san.cnf`
-
-To verify use `openssl x509 -in cert.pem -text -noout`. Execute `openssl x509 -outform der -in cert.pem -out cert.crt` to create Windows-useable .crt file.
-
-#### Useage within Angular
-Add following to angular.json:
-
-"serve": {
-    ...
-    "options": {
-        "sslKey": "key.pem",
-        "sslCert": "cert.pem",
-        "ssl": true
-    }
-},
-
-See additional config: https://stackoverflow.com/questions/39210467/get-angular-cli-to-ng-serve-over-https
-
-
-### Further Reference
-- https://medium.com/@antelle/how-to-generate-a-self-signed-ssl-certificate-for-an-ip-address-f0dd8dddf754
-- https://stackoverflow.com/questions/56514116/how-do-i-get-deviceorientationevent-and-devicemotionevent-to-work-on-safari
+3. **Start the Docker Container**
+   docker run -d --name goodun-backend -p 8080:8080 goodsun-backend
