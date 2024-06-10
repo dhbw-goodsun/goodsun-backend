@@ -18,7 +18,9 @@ This application is licensed under `CC BY-NC 4.0`. No commercial use. This sourc
    cd your-repo
 
 2. **Build the Docker Image**
+   ```sh
    docker build -t goodsun-backend .
 
-3. **Start the Docker Container**
+4. **Start the Docker Container**
+   ```sh
    docker run -d --name goodun-backend -p 8080:8080 goodsun-backend
