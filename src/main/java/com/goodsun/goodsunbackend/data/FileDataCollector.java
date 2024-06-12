@@ -12,10 +12,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * The FileDataCollector class is responsible for loading weather data from CSV files
+ * based on GPS coordinates and a specified year.
+ * @author Jonas Nunnenmacher
+ */
 public class FileDataCollector {
 
     private static final String FILE_LOCATION = "weatherData/";
     private static final String FILE_ENDING = ".csv";
+
+    /**
+     * Loads file data based on the provided GPS coordinates and year.
+     *
+     * @param gpsCoordinates the GPS coordinates for which data is to be loaded
+     * @param year the year for which data is to be loaded
+     * @return a list of FileData objects containing the weather data
+     */
     public List<FileData> loadFileData(GpsCoordinates gpsCoordinates, int year){
         List<FileData> fileData = new ArrayList<>();
         String filePath = FILE_LOCATION + gpsCoordinates.longitude() + " " + gpsCoordinates.latitude() + "_" + year + FILE_ENDING;
@@ -39,6 +52,12 @@ public class FileDataCollector {
         return fileData;
     }
 
+    /**
+     * Extracts the date and time of a CSV line into a LocalDateTime object.
+     *
+     * @param values the array of string values from a CSV line
+     * @return a LocalDateTime object representing the date and time from the CSV line
+     */
     public LocalDateTime getLocalDateTimeFromCSVLine(String[] values) {
         return LocalDateTime.of(Integer.parseInt(values[1]),Integer.parseInt(values[2]),Integer.parseInt(values[3]),Integer.parseInt(values[4]),Integer.parseInt(values[5]));
     }

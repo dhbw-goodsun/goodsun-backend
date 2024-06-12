@@ -12,9 +12,20 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Service class responsible for calculating PV system results.
+ *
+ * @author Jonas Nunnenmacher
+ */
 @Component
 public class CalculatorService {
 
+    /**
+     * Calculates the results for the provided user data.
+     *
+     * @param userData the user data containing information about the PV system
+     * @return the results of the calculation, including output with and without shadowing effects
+     */
     public Results calculateResult(UserData userData) {
         //get and correct relevant Data from user request
         UserPvSystem userPvSystem = UserPvSystem.getUserPvSystem(userData);
@@ -29,6 +40,12 @@ public class CalculatorService {
         return new Results(calculatedOutput, calculatedOutputNoShadows);
     }
 
+    /**
+     * Calculates the total output of the PV system per year over the years 2017-2019.
+     *
+     * @param userPvSystem the user's PV system configuration
+     * @return the averaged total output of the PV system per year in kWh
+     */
     private int calculateOutput(UserPvSystem userPvSystem) {
         double calculatedOutput = 0;
 
@@ -49,18 +66,23 @@ public class CalculatorService {
         }
 
 
-        // adjust to kWh per y
+        // adjust to kWh per year
         calculatedOutput = calculatedOutput * 0.001 / 3;
         return (int) calculatedOutput;
     }
 
+    /**
+     * Calculates the output of the PV system for a given 15 min time step.
+     *
+     * @param userPvSystem the user's PV system configuration
+     * @param fileData the weather data for the current time step
+     * @return the output of the PV system for the current time step in Wh
+     */
     private double calculateTimestepOutput(UserPvSystem userPvSystem, FileData fileData){
         //calculate sunPosition
         SunPositionService sunPositionService = new SunPositionService();
         SunPosition sunPosition = sunPositionService.getSunPosition(userPvSystem.getGpsCoordinates(), fileData.localDateTime());
 
-        //System.out.println("panel1: " +userPvSystem.getPvModules().get(0));
-        //System.out.println("panel1: " +userPvSystem.getPvModules().get(1));
         //calculate planeOfArrayIrradiance and modules output DcPower
         PlaneOfArrayIrradianceService poaIrradiancaService = new PlaneOfArrayIrradianceService();
         ModuleService moduleService = new ModuleService();

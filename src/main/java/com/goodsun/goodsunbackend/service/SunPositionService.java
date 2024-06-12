@@ -6,9 +6,26 @@ import com.goodsun.goodsunbackend.model.request.GpsCoordinates;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+
+/**
+ * Service class for calculating the position of the sun based on GPS coordinates and local date and time.
+ * Uses algorithms to determine the azimuth and elevation of the sun.
+ *
+ * @see <a href="https://doi.org/https://doi.org/10.1016/0038-092X(88)90045-X">Literature (1)</a>
+ * @see <a href="https://www.google.de/books/edition/_/jYynOwAACAAJ?hl=de&sa=X&ved=2ahUKEwjq2dD75daGAxU3hP0HHW8vCHcQ8fIDegQIFhAL">Literature (2)</a>
+ * @author Jonas Nunnenmacher
+ */
 @Component
 public class SunPositionService {
 
+    /**
+     * Calculates the position of the sun based on GPS coordinates and local date and time.
+     * Uses various algorithms to determine the azimuth and elevation of the sun.
+     *
+     * @param gpsCoordinates The GPS coordinates of the location.
+     * @param localDateTime The local date and time.
+     * @return The position of the sun (azimuth and elevation).
+     */
     public SunPosition getSunPosition(GpsCoordinates gpsCoordinates, LocalDateTime localDateTime) {
         Julian dateTimeJulian = convertToJulian(localDateTime.minusHours(1));
         double timeVariableN = calcTimeVariableN(dateTimeJulian);
@@ -27,6 +44,12 @@ public class SunPositionService {
         return new SunPosition(azimuth,elevation);
     }
 
+    /**
+     * Converts the given local date and time to Julian representation.
+     *
+     * @param dateTime The local date and time.
+     * @return The Julian representation of the date and time.
+     */
     private Julian convertToJulian(LocalDateTime dateTime) {
         int year = dateTime.getYear();
         int month = dateTime.getMonthValue();
@@ -42,10 +65,26 @@ public class SunPositionService {
         return new Julian(julianDay, dayFraction, julianDateTime, dateTime);
     }
 
+    /**
+     * Calculates the elevation angle of the sun.
+     *
+     * @param geoCoordinateHourAngleSunT The geometric coordinate hour angle of the sun.
+     * @param latitude The latitude of the location.
+     * @param declinationD The declination of the sun.
+     * @return The elevation angle of the sun.
+     */
     private double calcElevation(double geoCoordinateHourAngleSunT, double latitude, double declinationD) {
         return Math.toDegrees(Math.asin(this.cos(declinationD) * this.cos(geoCoordinateHourAngleSunT) * this.cos(latitude) + this.sin(declinationD) * sin(latitude)));
     }
 
+    /**
+     * Calculates the azimuth angle of the sun.
+     *
+     * @param geoCoordinateHourAngleSunT The geometric coordinate hour angle of the sun.
+     * @param latitude The latitude of the location.
+     * @param declinationD The declination of the sun.
+     * @return The azimuth angle of the sun.
+     */
     private double calcAzimuth(double geoCoordinateHourAngleSunT, double latitude, double declinationD) {
         return Math.toDegrees(Math.atan(this.sin(geoCoordinateHourAngleSunT) / (this.cos(geoCoordinateHourAngleSunT) * this.sin(latitude) - this.tan(declinationD) * this.cos(latitude)))) + 180.0;
     }
